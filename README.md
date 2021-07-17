@@ -15,4 +15,3 @@ Simple GUI app to detect colors from camera or an image file.
 - PyQt5
 - OpenCV
 - Pandas
-- fbs (Not Used as of now)
