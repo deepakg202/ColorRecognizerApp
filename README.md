@@ -1,9 +1,6 @@
 # Color Recognizer App
 Simple GUI app to detect colors from camera or an image file.
 
-## Requirements
-- [qt5-base](https://archlinux.org/packages/extra/x86_64/qt5-base/)
-
 ## Instructions
 - Clone the repo and `cd` into the directory.
 - Create a `venv` by running `python -m venv ./venv`
