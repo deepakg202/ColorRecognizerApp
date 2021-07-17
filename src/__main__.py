@@ -1,10 +1,17 @@
-from gui import UI
+from pathlib import Path
+import os
 import sys
+
 import cv2
+from PyQt5 import __file__ as PYQTPATH
 from PyQt5.QtGui import QColor, QCursor
 from PyQt5.QtWidgets import QApplication, QLabel, QVBoxLayout, QFrame
 from PyQt5.QtCore import Qt
 from cvUtils import ColorRecognizer
+from gui import UI
+os.environ["QT_QPA_PLATFORM_PLUGIN_PATH"] = os.fspath(
+    Path(PYQTPATH).resolve().parent / "Qt5" / "plugins"
+)
 
 
 class ProgramWindow(UI):
