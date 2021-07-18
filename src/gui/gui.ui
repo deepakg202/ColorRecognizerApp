@@ -15,17 +15,17 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="1" column="1">
-     <widget class="QPushButton" name="browseBtn">
-      <property name="text">
-       <string>Browse</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0" colspan="3">
+    <item row="3" column="0" colspan="4">
      <widget class="Line" name="line">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QPushButton" name="resetBtn">
+      <property name="text">
+       <string>Reset</string>
       </property>
      </widget>
     </item>
@@ -36,14 +36,7 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="2">
-     <widget class="QPushButton" name="resetBtn">
-      <property name="text">
-       <string>Reset</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="3">
+    <item row="0" column="0" colspan="4">
      <widget class="QSplitter" name="splitter">
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
@@ -101,12 +94,27 @@
       </widget>
      </widget>
     </item>
+    <item row="1" column="1">
+     <widget class="QPushButton" name="browseBtn">
+      <property name="text">
+       <string>Browse</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QPushButton" name="changeStreamBtn">
+      <property name="text">
+       <string>Change Stream</string>
+      </property>
+     </widget>
+    </item>
    </layout>
    <zorder>captureBtn</zorder>
    <zorder>resetBtn</zorder>
    <zorder>browseBtn</zorder>
    <zorder>splitter</zorder>
    <zorder>line</zorder>
+   <zorder>changeStreamBtn</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar">
    <property name="maximumSize">

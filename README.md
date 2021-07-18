@@ -8,7 +8,16 @@ Simple GUI app to detect colors from camera or an image file.
 - Run `pip3 install -r requirements.txt`
 - Run `python3 src`
 
-## Demo
+## For using Mobile Camera (Android Devices)
+- Make Sure the computer and the mobile is connected to the same wifi network
+- Download `DroidCam App`
+- Run the app and see the `Device IP`
+- Open the Qt App and click on `Change Stream` 
+- Type `http://<Device IP>:4747/mjpegfeed?640x480`
+
+To use the connected webcams on computer, type integers like `0` (Default) or `1` in `Change Stream` to use them. 
+
+## Demo (Outdated)
 ![Working Demo APNG](res/demo.apng)
 
 

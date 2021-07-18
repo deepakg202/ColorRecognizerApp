@@ -4,7 +4,7 @@ from os import path
 import numpy as np
 from PyQt5 import uic
 from PyQt5.QtGui import QImage, QPixmap, QImageReader
-from PyQt5.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QFileDialog, QGridLayout, QStatusBar
+from PyQt5.QtWidgets import QMainWindow, QPushButton, QApplication, QLabel, QFileDialog, QGridLayout, QStatusBar, QInputDialog, QMessageBox
 from PyQt5.QtCore import QThread, pyqtSignal, Qt, QDir, pyqtSlot
 
 
@@ -16,6 +16,7 @@ class UI(QMainWindow):
         self.captureBtn = self.findChild(QPushButton, 'captureBtn')
         self.browseBtn = self.findChild(QPushButton, 'browseBtn')
         self.resetBtn = self.findChild(QPushButton, 'resetBtn')
+        self.changeStreamBtn = self.findChild(QPushButton, 'changeStreamBtn')
 
         self.imageArea = self.findChild(QLabel, 'imageArea')
         self.outputBox = self.findChild(QGridLayout, 'outputBox')
@@ -28,9 +29,13 @@ class UI(QMainWindow):
     def handlers(self):
         self.imageArea.mousePressEvent = self.onMouseClickOnImageArea
         self.cameraFeed.feedSignal.connect(self.imageUpdateSlot)
+        self.cameraFeed.errorSignal.connect(
+            lambda s: QMessageBox.about(self, "Error Occured", s))
+
         self.cameraFeed.start()
 
         self.captureBtn.clicked.connect(self.triggerCapture)
+        self.changeStreamBtn.clicked.connect(self.changeStream)
 
         self.resetBtn.clicked.connect(self.reset)
 
@@ -48,8 +53,18 @@ class UI(QMainWindow):
     def reset(self):
         self.resetBtn.setEnabled(False)
         self.currentImage = None
+        self.cameraFeed.setCamIndex(0)
         self.cameraFeed.start()
         self.resetBtn.setEnabled(True)
+
+    @ pyqtSlot()
+    def changeStream(self):
+        text, _ = QInputDialog.getText(self, 'Set Camera Stream/Index',
+                                       'Enter Valid Url/Integer')
+        if text:
+            if(text.isdecimal()):
+                text = int(text)
+            self.cameraFeed.setCamIndex(text)
 
     @ pyqtSlot()
     def triggerCapture(self):
@@ -130,18 +145,35 @@ class SampleThread(QThread):
 
 class CameraFeed(QThread):
     feedSignal = pyqtSignal(np.ndarray)
+    errorSignal = pyqtSignal(str)
+
+    def __init__(self, index=0):
+        super(CameraFeed, self).__init__()
+        self.index = index
 
     def run(self):
         self.threadActive = True
-        capture = cv2.VideoCapture(0)
+        self.capture = cv2.VideoCapture(self.index)
         while self.threadActive:
-            ret, frame = capture.read()
-            if ret:
-                self.feedSignal.emit(frame)
+            if self.capture and self.capture.isOpened():
+                ret, frame = self.capture.read()
+                if ret:
+                    self.feedSignal.emit(frame)
 
     def stop(self):
         self.threadActive = False
         self.quit()
+
+    def setCamIndex(self, index):
+        if(index == self.index):
+            return
+        cap = cv2.VideoCapture(index)
+        if not cap or not cap.isOpened():
+            self.errorSignal.emit(
+                f'Error: unable to open video source: {index}')
+            return
+        self.capture = cap
+        self.index = index
 
 
 def main(args):
