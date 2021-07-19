@@ -24,7 +24,7 @@ class UI(QMainWindow):
         self.cameraFeed = CameraFeed()
 
         self.handlers()
-        self.currentImage = None
+        self.currentImage = self.createBlankImage()
 
     def handlers(self):
         self.imageArea.mousePressEvent = self.onMouseClickOnImageArea
@@ -52,9 +52,9 @@ class UI(QMainWindow):
     @ pyqtSlot()
     def reset(self):
         self.resetBtn.setEnabled(False)
-        self.currentImage = None
-        self.cameraFeed.setCamIndex(0)
-        self.cameraFeed.start()
+        self.currentImage = self.createBlankImage()
+        if not self.cameraFeed.threadActive:
+            self.cameraFeed.start()
         self.resetBtn.setEnabled(True)
 
     @ pyqtSlot()
@@ -125,6 +125,9 @@ class UI(QMainWindow):
         # Event After mouse clicked in imageArea
         pass
 
+    def createBlankImage(self):
+        return np.zeros((640, 480, 3), np.uint8)
+
 
 class SampleThread(QThread):
     # Sample Thread to perform time consuming operations
@@ -134,6 +137,7 @@ class SampleThread(QThread):
         super(SampleThread, self).__init__()
         self.args = args
         self.cb = callback
+        self.setObjectName("Sample Thread")
 
     def run(self):
         o = self.cb(*self.args)
@@ -150,10 +154,12 @@ class CameraFeed(QThread):
     def __init__(self, index=0):
         super(CameraFeed, self).__init__()
         self.index = index
+        self.setObjectName("Camera Thread")
+        self.capture = cv2.VideoCapture(self.index)
 
     def run(self):
         self.threadActive = True
-        self.capture = cv2.VideoCapture(self.index)
+
         while self.threadActive:
             if self.capture and self.capture.isOpened():
                 ret, frame = self.capture.read()
