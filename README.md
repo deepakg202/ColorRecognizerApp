@@ -5,7 +5,7 @@ Simple GUI app to detect colors from camera or an image file.
 - Clone the repo and `cd` into the directory.
 - Create a `venv` by running `python3 -m venv ./venv`
 - Activate virtual env by running `source ./venv/bin/activate`
-- Run `pip3 install -r requirements.txt`
+- Run `pip3 install -Ur requirements.txt`
 - Run `python3 src`
 
 ## For using Mobile Camera (Android Devices)
